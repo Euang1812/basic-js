@@ -1,0 +1,24 @@
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <script>
+    if (true) {
+
+      let b = () => {
+        let a = 'hello';
+        let c = () => {
+          return a;
+        }
+        return c;
+      }
+      let d = b();
+      console.log(d());
+    }
+  </script>
+</body>
+
+</html>

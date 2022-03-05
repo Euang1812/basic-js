@@ -1,0 +1,190 @@
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <title>계산기</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    #result {
+      width: 180px;
+      height: 50px;
+      margin: 5px;
+      text-align: right
+    }
+
+    #operator {
+      width: 50px;
+      height: 50px;
+      margin: 5px;
+      text-align: center
+    }
+
+    button {
+      width: 50px;
+      height: 50px;
+      margin: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <input readonly id="operator">
+  <input readonly type='number' id="result">
+  <div class="row">
+    <button id="num7">7</button>
+    <button id="num8">8</button>
+    <button id="num9">9</button>
+    <button id="plus">+</button>
+  </div>
+
+  <div class="row">
+    <button id="num4">4</button>
+    <button id="num5">5</button>
+    <button id="num6">6</button>
+    <button id="minus">-</button>
+  </div>
+
+  <div class="row">
+    <button id="num1">1</button>
+    <button id="num2">2</button>
+    <button id="num3">3</button>
+    <button id="divide">/</button>
+  </div>
+
+  <div class="row">
+    <button id="clear">C</button>
+    <button id="num0">0</button>
+    <button id="calculate">=</button>
+    <button id="multiply">*</button>
+  </div>
+  <div>
+    <button id="log">확인용</button> 
+    <span id="console">확인할곳</span>
+  </div>
+  <script>
+    let numOne = '';
+    let operator = '';
+    let numTwo = '';
+    let sum = '';
+    let resultConfirm = 'false';
+    const $operator = document.querySelector('#operator');
+    const $result = document.querySelector('#result');
+    const $plus = document.querySelector('#plus');
+
+    const onClickNumber = (e) => {
+      if (resultConfirm === 'true') {
+        resultConfirm = 'false';
+        $result.value = '';
+      }
+      if (!operator) {
+        numOne += e.target.textContent;
+        $result.value += e.target.textContent;
+        console.log(numOne);
+        return;
+
+      }
+      if (!numTwo) {
+        $result.value = '';
+      }
+      numTwo += e.target.textContent;
+      $result.value += e.target.textContent;
+      console.log(numTwo);
+    }
+
+    document.querySelector('#num0').addEventListener('click', onClickNumber)
+    document.querySelector('#num1').addEventListener('click', onClickNumber)
+    document.querySelector('#num2').addEventListener('click', onClickNumber)
+    document.querySelector('#num3').addEventListener('click', onClickNumber)
+    document.querySelector('#num4').addEventListener('click', onClickNumber)
+    document.querySelector('#num5').addEventListener('click', onClickNumber)
+    document.querySelector('#num6').addEventListener('click', onClickNumber)
+    document.querySelector('#num7').addEventListener('click', onClickNumber)
+    document.querySelector('#num8').addEventListener('click', onClickNumber)
+    document.querySelector('#num9').addEventListener('click', onClickNumber)
+
+    const onClickOperator = (op) => () => {
+      $result.value = '';
+      if (numOne && numTwo) {
+        if (operator === '+') {
+          numOne = Number(numOne) + Number(numTwo);
+          numTwo = '';
+          $result.value = numOne;
+        } else if (operator === '-') {
+          numOne = Number(numOne) - Number(numTwo);
+          numTwo = '';
+          $result.value = numOne;
+        } else if (operator === '*') {
+          numOne = Number(numOne) * Number(numTwo);
+          console.log(numOne);
+          numTwo = '';
+          $result.value = numOne;
+        } else {
+          numOne = Number(numOne) / Number(numTwo);
+          console.log(numOne);
+          numTwo = '';
+          $result.value = numOne;
+        }
+        return;
+      }
+      if (numOne) {
+        operator = op
+        console.log(operator);
+        $operator.value = op;
+      } else {
+        alert('숫자를 먼저 입력하세요');
+      }
+    }
+    document.querySelector('#plus').addEventListener('click', onClickOperator('+'));
+    document.querySelector('#minus').addEventListener('click', onClickOperator('-'));
+    document.querySelector('#multiply').addEventListener('click', onClickOperator('*'));
+    document.querySelector('#divide').addEventListener('click', onClickOperator('/'));
+    document.querySelector('#clear').addEventListener('click', () => {
+      numOne = '';
+      numTwo = '';
+      operator = '';
+      $result.value = '';
+      $operator.value = '';
+    });
+    const calculateResult = (value) => {
+      numOne = value;
+      numTwo = '';
+      operator = '';
+      $operator.value = '';
+      resultConfirm = 'true';
+    }
+    document.querySelector('#calculate').addEventListener('click', () => {
+      if (numTwo) {
+        if (operator === '+') {
+          sum = Number(numOne) + Number(numTwo);
+          $result.value = sum;
+          calculateResult($result.value);
+        } else if (operator === '-') {
+          sum = Number(numOne) - Number(numTwo);
+          $result.value = sum;
+          calculateResult($result.value);
+        } else if (operator === '*') {
+          sum = Number(numOne) * Number(numTwo);
+          $result.value = sum;
+          calculateResult($result.value);
+          console.log(sum);
+        } else {
+          sum = Number(numOne) / Number(numTwo);
+          $result.value = sum;
+          calculateResult($result.value);
+          console.log(sum);
+        }
+      } else {
+        alert('숫자를 먼저 입력하시오=');
+      }
+    });
+    const $console = document.querySelector('#console');
+    document.querySelector('#log').addEventListener('click',()=>{
+      $console.textContent= Math.random();
+    });
+  </script>
+</body>
+
+</html>

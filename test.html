@@ -1,0 +1,67 @@
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>끝말잇기</title>
+</head>
+
+<body>
+    <div><span id="order">1</span>번째 참가자</div>
+    <div>제시어 : <span id="word"></span></div>
+    <input type="text">
+    <button>입력</button>
+    <script>
+        const number = Number(prompt('참가 인원 수')); // prompt로 받으면 문자열 이기 때문에 Number로 형변환
+        const $button = document.querySelector('button');
+        const $input = document.querySelector('input');
+        const $word = document.querySelector('#word');
+        const $order = document.querySelector('#order');
+        let word;
+        let newWord;
+
+        const onClickButton = () => {
+            if (!word) { //제시어가 비어있때 입력후 버튼을 클릭 했을 때
+                word = newWord;
+                $word.textContent = word;
+                $input.value = '';
+                console.log(newWord);
+                const order = Number($order.textContent);
+                if (order + 1 > number) {
+                    $order.textContent = 1;
+                } else {
+                    $order.textContent = order + 1;
+                }
+            } else { //제시어가 이미 존재하는 경우
+                if (word[word.length - 1] === newWord[0]) {
+                    word = newWord;
+                    $word.textContent = word;
+                    $input.value = '';
+                    console.log(newWord);
+                    const order = Number($order.textContent);
+                    if (order + 1 > number) {
+                        $order.textContent = 1;
+                    } else {
+                        $order.textContent = order + 1;
+                    }
+                }else{
+                    alert('틀렸어!');
+                }
+            }
+        };
+
+        const onInput = (event) => {
+            newWord = event.target.value;
+            // console.log('글자입력',event.target.value);
+        };
+
+        $button.addEventListener('click', onClickButton);
+        $input.addEventListener('input', onInput);
+
+
+
+    </script>
+</body>
+
+</html>

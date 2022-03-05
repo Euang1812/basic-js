@@ -1,0 +1,140 @@
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <title>로또 추첨기</title>
+  <style>
+    .ball {
+      display: inline-block;
+      border: 1px solid black;
+      border-radius: 20px;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      font-size: 20px;
+      text-align: center;
+      margin-right: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="result">추첨 결과는 ? : </div>
+  <div id="bonus">보너스 : </div>
+  <form id="form" style="margin-top: 20px;">
+    <span> 숫자 입력</span>
+    <input type="text" id="input">
+    <button id="button"> 클릭</button>
+  </form>
+
+  <script>
+    const $form = document.querySelector('#form')
+    const $input = document.querySelector('#input');
+    const $button = document.querySelector('#button');
+
+    const candidate = Array(45).fill().map((v, i) => i + 1);
+    const shuffie = [];
+    while (candidate.length > 0) {
+      const random = Math.floor(Math.random() * candidate.length);
+      const spliceArray = candidate.splice(random, 1);
+      const value = spliceArray[0];
+      shuffie.push(value);
+    }
+    console.log(shuffie);
+    const winBalls = shuffie.slice(0, 6).sort((a, b) => a - b);
+    const bonus = shuffie[6];
+    console.log(winBalls, bonus);
+
+    const $result = document.querySelector('#result');
+    const $bonus = document.querySelector('#bonus');
+
+    function colorize(number, $tag) {
+      if (number < 10) {
+        $tag.style.backgroundColor = 'red';
+        $tag.style.color = 'white';
+      } else if (number < 20) {
+        $tag.style.backgroundColor = 'orange';
+      } else if (number < 30) {
+        $tag.style.backgroundColor = 'yellow';
+      } else if (number < 40) {
+        $tag.style.backgroundColor = 'blue';
+        $tag.style.color = 'white';
+      } else {
+        $tag.style.backgroundColor = 'green';
+        $tag.style.color = 'white';
+      }
+    }
+
+    const drawBall = (number, $parent) => {
+      const $ball = document.createElement('div');
+      $ball.className = 'ball';
+      colorize(number, $ball);
+      $ball.textContent = number;
+      $parent.appendChild($ball);
+    }
+
+    const ballResult = () => {
+      for (var i = 0; i < winBalls.length; i++) {
+        (function (i) {
+          setTimeout(() => {
+            console.log(winBalls[i], i);
+            drawBall(winBalls[i], $result);
+          }, (i + 1) * 200);
+        })(i);
+      }
+      setTimeout(() => {
+        drawBall(bonus, $bonus);
+      }, 1500)
+    }
+
+    const onClickValueCheck = (event) => {
+      event.preventDefault();
+      const a = $input.value;
+      let splits = a.split(',');//trim 양쪽의 공백을 지운다./
+      // console.log('splits : ' + splits);
+      // console.log('splits.length ' + splits.length);
+
+      if (splits.length === 6) {
+        $input.value = '';
+        ballResult();
+
+        const lottoResultList = winBalls.concat(bonus);
+        console.log(lottoResultList);
+        const result = splits.filter(x => lottoResultList.includes(Number(x)));
+
+        switch (result.length) {
+          case 6:
+            const win = result.filter(x => bonus === Number(x));
+            if (win.length < 1) {
+              alert("1등");
+            }else {
+              alert("2등");
+            }
+            break;
+          case 5:
+            alert("3등");
+            break;
+          case 4:
+            alert("4등");
+            break;
+          case 3:
+            alert("5등");
+            break;
+          default:
+            alert("당첨안됨");
+            break;
+        }
+
+      } else {
+        alert(',를 포함 숫자 6개를 입력 해주세요');
+      }
+
+    }
+
+    $form.addEventListener('submit', onClickValueCheck);
+
+  </script>
+
+</body>
+
+</html>
